@@ -1,0 +1,25 @@
+.imageCard {
+    height: 23.5rem;
+    width: 19rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.title {
+    height: 13%;
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.content {
+    height: 87%;
+    padding: 1rem;
+}
+
+.content img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}

@@ -1,0 +1,9 @@
+.header {
+    margin: 0 1rem;
+    padding: 1rem;
+    width: 78%; 
+    height: 5rem;
+    display: flex;
+    align-items: center;    
+    border-bottom: 1px solid #000;
+}

@@ -1,0 +1,12 @@
+.logo {
+    width: 400px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    user-select: none;
+}
+
+.logo .caption {
+    font-family: 'Ms Madi', cursive;
+    font-size: 48pt;
+}

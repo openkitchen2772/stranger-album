@@ -1,0 +1,64 @@
+.uploadForm {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.formControl {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.formControl label {
+    margin: 1rem 0;
+}
+
+.formControl.file label {
+    height: 20rem;
+    width: 30rem;
+    color: #555;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #00dcf0;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.formControl.file label:hover {
+    color: #00b1de;
+}
+
+.formControl input[type="file"] {
+    display: none;
+}
+
+.formControl input[type="text"] {
+    font-size: 13pt;
+    font-family: 'Open Sans';
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid #ccc;
+}
+
+.formControl input[type="text"]:focus {
+    outline: none;
+    border-bottom-color: #0080b6;
+}
+
+.submitButton {
+    width: 10rem;
+    padding: 1rem;
+    color:#0080b6;
+    background-color: white;
+    border: 2px solid #0080b6;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    color: #00b1de;
+    border-color: #00b1de;
+}
