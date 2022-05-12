@@ -4,6 +4,7 @@ import fs from 'fs';
 const handler = async (req, res) => {
     if (req.method === "POST") {
         const {
+            id,
             imageURL,
             title,
             creator
@@ -19,6 +20,7 @@ const handler = async (req, res) => {
             const collection = db.collection('photos');
     
             const result = await collection.insertOne({
+                id: id,
                 imageURL: imageURL,
                 title: title,
                 creator: creator,

@@ -1,0 +1,43 @@
+.notification {
+    position: fixed;
+    top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 2rem;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    background-color: white;
+    color: #555;
+    font-weight: bold;
+    z-index: 50;
+    animation: show 0.5s ease-out;
+}
+
+.notification.gone {
+    animation: gone 0.5s ease-in;
+    animation-fill-mode: forwards;
+}
+
+@keyframes show {
+    0% {
+        top: -50%;
+        opacity: 0;
+    }
+
+    100% {
+        top: 2%;
+        opacity: 1;
+    }
+}
+
+@keyframes gone {
+    0% {
+        top: 2%;
+        opacity: 1;
+    }
+
+    100% {
+        top: -50%;
+        opacity: 0;
+    }
+}

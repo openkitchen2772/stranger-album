@@ -14,12 +14,14 @@
 }
 
 .content {
+    position: relative;
     height: 87%;
+    width: 100%;
     padding: 1rem;
 }
 
-.content img {
+.nextImage {
+    position: relative;
     height: 100%;
     width: 100%;
-    object-fit: cover;
 }
