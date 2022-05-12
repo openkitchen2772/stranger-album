@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import styles from "./UploadForm.module.css";
+import Notification from "../UI/Notification/Notification";
 
 const uploadImageToImgur = async (formData) => {
     return fetch("https://api.imgur.com/3/image", {
@@ -13,9 +14,10 @@ const uploadImageToImgur = async (formData) => {
         .then((response) => response.json())
         .then(({ data }) => {
             return {
+                id: data.id,
                 imageURL: data.link,
                 title: data.title,
-                creator: "admin",
+                creator: "stranger",
             };
         });
 };
@@ -33,6 +35,20 @@ const addNewPhotoAPI = async (imageData) => {
 const UploadForm = () => {
     const [title, setTitle] = useState("");
     const [file, setFile] = useState(null);
+    const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+
+    useEffect(() => {
+        let timer;
+        if (isUploadSuccess) {
+            timer = setTimeout(() => {
+                setIsUploadSuccess(false);
+            }, 4000);
+        }
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [isUploadSuccess]);
 
     const titleChangedHandler = (event) => {
         setTitle(event.target.value);
@@ -44,6 +60,7 @@ const UploadForm = () => {
 
     const SubmitHandler = async (event) => {
         event.preventDefault();
+        setIsUploadSuccess(false);
 
         const formData = new FormData();
 
@@ -52,6 +69,14 @@ const UploadForm = () => {
 
         let imageData = await uploadImageToImgur(formData);
         let response = await addNewPhotoAPI(imageData);
+
+        setIsUploadSuccess(true);
+        clearUploadForm();
+    };
+
+    const clearUploadForm = () => {
+        setTitle("");
+        setFile(null);
     };
 
     let uploadBoxContent = useMemo(() => {
@@ -65,6 +90,7 @@ const UploadForm = () => {
                             height: "200px",
                             objectFit: "contain",
                         }}
+                        alt="Upload Photo"
                     />
                     <div>{file.name}</div>
                 </>
@@ -81,6 +107,12 @@ const UploadForm = () => {
 
     return (
         <div>
+            {isUploadSuccess ? (
+                <Notification lastTime={3000}>
+                    {"Your photo is uploaded! :)"}
+                </Notification>
+            ) : null}
+
             <form className={styles.uploadForm} onSubmit={SubmitHandler}>
                 <div className={styles.formControl}>
                     <label htmlFor="name">Photo Title</label>

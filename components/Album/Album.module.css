@@ -2,27 +2,6 @@
     display: flex;
     padding: 3rem 7rem;
     flex-wrap: wrap;
-    justify-content: space-between;
     align-items: flex-start;
-    gap: 1.3rem;
-}
-
-.modalContent {
-    padding: 0 1rem;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-}
-
-.modalContent img {
-    height: 35vh;
-    width: 100%;
-    object-fit: contain;
-}
-
-@media (min-height: 600px) and (min-width: 600px) {
-    .modalContent img {
-        height: 350px;
-        width: 100%;
-    }
+    gap: 1.45rem;
 }

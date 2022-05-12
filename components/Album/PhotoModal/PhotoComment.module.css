@@ -1,0 +1,15 @@
+.photoComment {
+    margin-bottom: 1.5rem;
+}
+
+.commentUser {
+    margin: 0.5rem 0;
+    font-size: 11pt;
+    color: #333;
+}
+
+.date {
+    font-size: 9pt;
+    font-style: italic;
+    color: #888;
+}

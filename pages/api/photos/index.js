@@ -1,5 +1,8 @@
 import { MongoClient } from "mongodb";
 
+// Potentially obsolete, photos data fetching handled by server-side rendering now
+//   instead of client side to api interaction
+
 const handler = async (req, res) => {
     if (req.method === "GET") {
         let client;

@@ -17,9 +17,19 @@
     left: 50%;
     transform: translate(-50%, -50%);
     height: 75vh;
-    width: 60vw;
+    width: 75vw;
     border: 1px solid #ccc;
     border-radius: 10px;
     z-index: 20;
     overflow: hidden;
+}
+
+.isLoading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: white;
+    z-index: 30;
 }

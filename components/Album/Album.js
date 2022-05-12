@@ -1,18 +1,35 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import ImageCard from "./ImageCard";
 import styles from "./Album.module.css";
 import Modal from "../UI/Modal/Modal";
+import PhotoModal from "./PhotoModal/PhotoModal";
+import { albumActions, fetchSelectedPhoto } from "../../store/album";
 
 const Album = ({ photos }) => {
-    const [selectedPhoto, setSelectedPhoto] = useState(null);
+    const dispatch = useDispatch();
 
-    const closeModalHandler = () => {
-        setSelectedPhoto(null);
-    };
+    const { selectedPhoto, isLoading } = useSelector((state) => {
+        return {
+            selectedPhoto: state.album.selectedPhoto,
+            isLoading: state.album.isLoading,
+        };
+    });
 
     const selectPhotoHandler = (photo) => {
-        setSelectedPhoto(photo);
+        const photoURLChunks = photo.imageURL.split("/");
+        const photoId = photoURLChunks[photoURLChunks.length - 1].split(".")[0];
+
+        const photoData = {
+            photoId: photoId,
+            ...photo,
+        };
+
+        dispatch(fetchSelectedPhoto(photoData));
+    };
+
+    const closeModalHandler = () => {
+        dispatch(albumActions.resetSelectedPhoto());
     };
 
     const albumPhotosContent = photos.map((photo, i) => {
@@ -26,16 +43,10 @@ const Album = ({ photos }) => {
     });
 
     let modalContent;
-    if (selectedPhoto) {
+    if (selectedPhoto.url) {
         modalContent = (
-            <Modal onClose={closeModalHandler}>
-                <div className={styles.modalContent}>
-                    <h1>{selectedPhoto.title}</h1>
-                    <img src={selectedPhoto.imageURL} alt="Photo" />
-                    <p>
-                        <i>Uploaded By {selectedPhoto.creator}</i>
-                    </p>
-                </div>
+            <Modal onClose={closeModalHandler} isLoading={isLoading}>
+                <PhotoModal selectedPhoto={selectedPhoto} />
             </Modal>
         );
     }
