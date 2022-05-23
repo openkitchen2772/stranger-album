@@ -3,15 +3,19 @@ import { useState, useMemo, useEffect } from "react";
 import styles from "./UploadForm.module.css";
 import Notification from "../UI/Notification/Notification";
 
-const uploadImageToImgur = async (formData) => {
-    return fetch("https://api.imgur.com/3/image", {
+const uploadImageToImgur = async (formData, imgurClientId) => {
+    let error, responseStatus;
+    const imageData = await fetch("https://api.imgur.com/3/image", {
         method: "POST",
         body: formData,
         headers: {
-            Authorization: "Client-ID a3492a5941a6bf8",
+            Authorization: "Client-ID " + imgurClientId,
         },
     })
-        .then((response) => response.json())
+        .then((response) => {
+            responseStatus = response.status;
+            return response.json()
+        })
         .then(({ data }) => {
             return {
                 id: data.id,
@@ -19,36 +23,50 @@ const uploadImageToImgur = async (formData) => {
                 title: data.title,
                 creator: "stranger",
             };
-        });
-};
+        })
+        .catch((err) => (error = err));
 
-const addNewPhotoAPI = async (imageData) => {
-    return fetch("/api/photos/new-photo", {
+    if (error || responseStatus !== 200) {
+        console.log(responseStatus);
+        console.log(error);
+        return false;
+    }
+
+    // add image data to our mongo DB backend
+    const response = await fetch("/api/photos/new-photo", {
         method: "POST",
         body: JSON.stringify(imageData),
         headers: {
             "Content-Type": "application/json",
         },
     });
+    if (response.status !== 201) {
+        console.log(response);
+        return false;
+    }
+
+    return true;
 };
 
-const UploadForm = () => {
+const UploadForm = ({ imgurClientId }) => {
     const [title, setTitle] = useState("");
     const [file, setFile] = useState(null);
+    const [uploaded, setUploaded] = useState(false);
     const [isUploadSuccess, setIsUploadSuccess] = useState(false);
 
     useEffect(() => {
         let timer;
-        if (isUploadSuccess) {
+        if (uploaded) {
             timer = setTimeout(() => {
                 setIsUploadSuccess(false);
+                setUploaded(false);
             }, 4000);
         }
 
         return () => {
             clearTimeout(timer);
         };
-    }, [isUploadSuccess]);
+    }, [uploaded]);
 
     const titleChangedHandler = (event) => {
         setTitle(event.target.value);
@@ -67,10 +85,10 @@ const UploadForm = () => {
         formData.append("image", file, file.name);
         formData.append("title", title);
 
-        let imageData = await uploadImageToImgur(formData);
-        let response = await addNewPhotoAPI(imageData);
+        let uploadSuccess = await uploadImageToImgur(formData, imgurClientId);
 
-        setIsUploadSuccess(true);
+        setUploaded(true);
+        setIsUploadSuccess(uploadSuccess);
         clearUploadForm();
     };
 
@@ -105,14 +123,30 @@ const UploadForm = () => {
         }
     }, [file]);
 
+    let notificationContent;
+    if (uploaded) {
+        if (!isUploadSuccess) {
+            notificationContent = (
+                <Notification lastTime={3000}>
+                    <span style={{ color: "red" }}>
+                        {"Oh no, something went wrong!"}
+                    </span>
+                </Notification>
+            );
+        } else {
+            notificationContent = (
+                <Notification lastTime={3000}>
+                    <span style={{ color: "green" }}>
+                        {"Your photo is uploaded! :)"}
+                    </span>
+                </Notification>
+            );
+        }
+    }
+
     return (
         <div>
-            {isUploadSuccess ? (
-                <Notification lastTime={3000}>
-                    {"Your photo is uploaded! :)"}
-                </Notification>
-            ) : null}
-
+            {notificationContent}
             <form className={styles.uploadForm} onSubmit={SubmitHandler}>
                 <div className={styles.formControl}>
                     <label htmlFor="name">Photo Title</label>

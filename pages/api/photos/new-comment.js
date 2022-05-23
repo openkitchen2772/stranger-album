@@ -1,6 +1,7 @@
 const handler = async (req, res) => {
     if (req.method === "POST") {
-        await fetch("http://localhost:8080/newComment", {
+        const APIHost = process.env.API_HOST;
+        await fetch(`${APIHost}/newComment`, {
             method: "POST",
             body: JSON.stringify(req.body),
             headers: {

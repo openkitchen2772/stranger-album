@@ -32,15 +32,20 @@ const Album = ({ photos }) => {
         dispatch(albumActions.resetSelectedPhoto());
     };
 
-    const albumPhotosContent = photos.map((photo, i) => {
-        return (
-            <ImageCard
-                photo={photo}
-                key={`photo_${i}`}
-                onSelect={selectPhotoHandler}
-            />
-        );
-    });
+    let albumPhotosContent = (
+        <div>{`Oh ... The album is still empty, maybe let's upload one?`}</div>
+    );
+    if (photos.length > 0) {
+        albumPhotosContent = photos.map((photo, i) => {
+            return (
+                <ImageCard
+                    photo={photo}
+                    key={`photo_${i}`}
+                    onSelect={selectPhotoHandler}
+                />
+            );
+        });
+    }
 
     let modalContent;
     if (selectedPhoto.url) {

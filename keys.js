@@ -1,1 +1,0 @@
-export const imgurClientId = "a3492a5941a6bf8";
