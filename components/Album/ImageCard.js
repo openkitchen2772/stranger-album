@@ -1,10 +1,29 @@
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import styles from "./ImageCard.module.css";
+import Image404 from "../../public/404_image.png";
 
 const ImageCard = ({ photo, onSelect }) => {
+    const [src, setSrc] = useState("");
+
+    useEffect(() => {
+        fetch(photo.imageURL).then((response) => {
+            if (response.status !== 200) {
+                setSrc(Image404);
+            } else {
+                setSrc(photo.imageURL);
+            }
+        });
+    }, []);
+
     return (
-        <div className={styles.imageCard} onClick={onSelect.bind(null, photo)}>
+        <div
+            className={styles.imageCard}
+            onClick={
+                src !== photo.imageURL ? () => {} : onSelect.bind(null, photo)
+            }
+        >
             <div className={styles.title}>{photo.title}</div>
             <div className={styles.content}>
                 {/* 
@@ -18,12 +37,14 @@ const ImageCard = ({ photo, onSelect }) => {
                     *   apply padding property
                 */}
                 <div className={styles.nextImage}>
-                    <Image
-                        layout="fill"
-                        objectFit="cover"
-                        src={photo.imageURL}
-                        alt="Cover Image"
-                    />
+                    {src && (
+                        <Image
+                            layout="fill"
+                            objectFit="cover"
+                            src={src}
+                            alt="Cover Image"
+                        />
+                    )}
                 </div>
             </div>
         </div>

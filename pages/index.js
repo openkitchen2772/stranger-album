@@ -1,12 +1,13 @@
 import { MongoClient } from "mongodb";
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Logo from "../components/UI/Logo/Logo";
 import Album from "../components/Album/Album";
 import { albumActions } from "../store/album";
+import LogoImage from "../public/Logo.png";
 
 export default function Home({ photosData }) {
     const dispatch = useDispatch();
@@ -32,6 +33,12 @@ export default function Home({ photosData }) {
                     name="description"
                     content="An album created and managed by all internet citizen!"
                 />
+                <meta name="og:title" content="Stranger Album" />
+                <meta
+                    name="og:description"
+                    content="An album created and managed by all internet citizen!"
+                />
+                <meta name="og:image" content={LogoImage} />
             </Head>
             <Logo />
             <Album photos={photosData} />
@@ -44,9 +51,7 @@ export const getStaticProps = async () => {
     let imageData = [];
 
     try {
-        client = await MongoClient.connect(
-            "mongodb+srv://admin:admin@cluster0.sdez4.mongodb.net/albumPhotos?retryWrites=true&w=majority"
-        );
+        client = await MongoClient.connect(process.env.CONNECTION_URL);
 
         const db = client.db();
         const collection = db.collection("photos");
