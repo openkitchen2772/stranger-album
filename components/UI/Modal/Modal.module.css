@@ -22,6 +22,7 @@
     border-radius: 10px;
     z-index: 20;
     overflow: hidden;
+    animation: show 0.2s ease-out;
 }
 
 .isLoading {
@@ -32,4 +33,14 @@
     font-weight: bold;
     color: white;
     z-index: 30;
+}
+
+@keyframes show {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

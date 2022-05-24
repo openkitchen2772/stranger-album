@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReply } from "@fortawesome/fontawesome-free-solid";
+import Image from "next/image";
 
 import styles from "./PhotoModal.module.css";
 import PhotoComment from "./PhotoComment";
@@ -44,6 +45,8 @@ const PhotoModal = ({ selectedPhoto }) => {
             content: comment,
         };
 
+        commentRef.current.value = "";
+
         await addNewComment(commentData, () => {
             dispatch(
                 fetchSelectedPhoto({
@@ -60,7 +63,14 @@ const PhotoModal = ({ selectedPhoto }) => {
         <div className={styles.photoModal}>
             <div className={styles.imageSide}>
                 <h1>{selectedPhoto.title} </h1>
-                <img src={selectedPhoto.url} alt="Photo" />
+                <div className={styles.imageSideImg}>
+                    <Image
+                        layout="fill"
+                        objectFit="contain"
+                        src={selectedPhoto.url}
+                        alt="Photo"
+                    />
+                </div>
                 <p>
                     <i>Uploaded By {selectedPhoto.creator}</i>
                 </p>

@@ -27,8 +27,14 @@
     cursor: pointer;
 }
 
-.formControl.file label:hover {
+.formControl.file label:not([class*=disabled]):hover {
     color: #00b1de;
+}
+
+.formControl.file label.disabled {
+    color: #ccc;
+    border-color: #ccc;
+    cursor: wait;
 }
 
 .formControl input[type="file"] {
@@ -58,7 +64,13 @@
     cursor: pointer;
 }
 
-.submitButton:hover {
+.submitButton:disabled {
+    border-color: #ccc;
+    color: #ccc;
+    cursor: wait;
+}
+
+.submitButton:not([disabled]):hover {
     color: #00b1de;
     border-color: #00b1de;
 }

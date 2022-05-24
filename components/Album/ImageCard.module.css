@@ -4,6 +4,14 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     cursor: pointer;
+    background-color: white;
+    transform: scale(1);
+    transition: transform ease-out 0.5s;
+}
+
+.imageCard:hover {
+    transform: scale(1.07);
+    transition: transform ease-out 0.5s;
 }
 
 .title {

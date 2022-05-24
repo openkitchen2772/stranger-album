@@ -34,3 +34,4 @@ yarn-error.log*
 2022-4-3-log.txt
 2022-4-4-log.txt
 2022-4-5-log.txt
+*.txt
