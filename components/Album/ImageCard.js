@@ -31,8 +31,8 @@ const ImageCard = ({ photo, onSelect }) => {
                         - position: absolute
                         - min-height, min-width=100%
                     * Position absolute will follow the height, width of 
-                    *   entire document / next position relative container
-                    *   so a position relative container is added to limit the
+                    *   entire document / next relative position container
+                    *   so here a relative position container is added to limit the
                     *   image height and allow the parent styles.content to 
                     *   apply padding property
                 */}

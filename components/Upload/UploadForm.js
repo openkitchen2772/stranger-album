@@ -1,7 +1,9 @@
+import React from "react";
 import { useState, useMemo, useEffect } from "react";
 
 import styles from "./UploadForm.module.css";
 import Notification from "../UI/Notification/Notification";
+import Spinner from "../UI/Spinner/Spinner";
 
 const uploadImageToImgur = async (formData, imgurClientId) => {
     let error, responseStatus;
@@ -14,7 +16,7 @@ const uploadImageToImgur = async (formData, imgurClientId) => {
     })
         .then((response) => {
             responseStatus = response.status;
-            return response.json()
+            return response.json();
         })
         .then(({ data }) => {
             return {
@@ -53,6 +55,7 @@ const UploadForm = ({ imgurClientId }) => {
     const [file, setFile] = useState(null);
     const [uploaded, setUploaded] = useState(false);
     const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         let timer;
@@ -79,6 +82,7 @@ const UploadForm = ({ imgurClientId }) => {
     const SubmitHandler = async (event) => {
         event.preventDefault();
         setIsUploadSuccess(false);
+        setIsLoading(true);
 
         const formData = new FormData();
 
@@ -87,6 +91,7 @@ const UploadForm = ({ imgurClientId }) => {
 
         let uploadSuccess = await uploadImageToImgur(formData, imgurClientId);
 
+        setIsLoading(false);
         setUploaded(true);
         setIsUploadSuccess(uploadSuccess);
         clearUploadForm();
@@ -98,7 +103,7 @@ const UploadForm = ({ imgurClientId }) => {
     };
 
     let uploadBoxContent = useMemo(() => {
-        if (file) {
+        if (file && !isLoading) {
             return (
                 <>
                     <img
@@ -113,6 +118,12 @@ const UploadForm = ({ imgurClientId }) => {
                     <div>{file.name}</div>
                 </>
             );
+        } else if (isLoading) {
+            return (
+                <>
+                    <Spinner />
+                </>
+            );
         } else {
             return (
                 <>
@@ -121,7 +132,7 @@ const UploadForm = ({ imgurClientId }) => {
                 </>
             );
         }
-    }, [file]);
+    }, [file, isLoading]);
 
     let notificationContent;
     if (uploaded) {
@@ -157,23 +168,32 @@ const UploadForm = ({ imgurClientId }) => {
                         size="30"
                         value={title}
                         onChange={titleChangedHandler}
+                        disabled={isLoading}
                         required
                     />
                 </div>
 
                 <div className={`${styles.formControl} ${styles.file}`}>
-                    <label htmlFor="uploadFile">{uploadBoxContent}</label>
+                    <label
+                        htmlFor="uploadFile"
+                        className={isLoading ? styles.disabled : ""}
+                    >
+                        {uploadBoxContent}
+                    </label>
                     <input
                         name="uploadFile"
                         id="uploadFile"
                         type="file"
                         accept="image/png, image/gif, image/jpeg"
                         onChange={fileUploadHandler}
+                        disabled={isLoading}
                         required
                     />
                 </div>
 
-                <button className={styles.submitButton}>Submit Photo</button>
+                <button className={styles.submitButton} disabled={isLoading}>
+                    {isLoading ? <span>Uploading ...</span> : "Submit Photo"}
+                </button>
             </form>
         </div>
     );
