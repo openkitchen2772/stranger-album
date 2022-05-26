@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReply } from "@fortawesome/fontawesome-free-solid";
@@ -7,6 +7,7 @@ import Image from "next/image";
 import styles from "./PhotoModal.module.css";
 import PhotoComment from "./PhotoComment";
 import { fetchSelectedPhoto } from "../../../store/album";
+import AuthContext from "../../../store/context/auth-context";
 
 const addNewComment = async (commentData, callback) => {
     await fetch("/api/photos/new-comment", {
@@ -21,6 +22,7 @@ const addNewComment = async (commentData, callback) => {
 const PhotoModal = ({ selectedPhoto }) => {
     const commentRef = useRef();
     const dispatch = useDispatch();
+    const authCtx = useContext(AuthContext);
 
     const comments = selectedPhoto.comments.map((comment, i) => {
         return (
@@ -37,10 +39,14 @@ const PhotoModal = ({ selectedPhoto }) => {
         e.preventDefault();
 
         const comment = commentRef.current.value;
+        if (comment.trim().length === 0 ) {
+            return;
+        }
+
         const commentData = {
             id: "",
             photo_Id: selectedPhoto.photoId,
-            creator: "stranger",
+            creator: authCtx.displayName,
             create_time: new Date().toISOString(),
             content: comment,
         };
@@ -58,6 +64,27 @@ const PhotoModal = ({ selectedPhoto }) => {
             );
         });
     };
+
+    let commentForm = <p style={{ fontWeight: "bold", color: "#999" }}>{`Login to leave comments :)`}</p>;
+    if (authCtx.tokenId) {
+        commentForm = (
+            <form
+                onSubmit={commentSubmitHandler}
+                className={styles.commentHeader}
+            >
+                <textarea
+                    ref={commentRef}
+                    className={styles.commentBox}
+                    type="textarea"
+                    rows="1"
+                    placeholder="I want to comment..."
+                />
+                <button type="submit" className={styles.commentSubmitButton}>
+                    <FontAwesomeIcon icon={faReply} size="sm" />
+                </button>
+            </form>
+        );
+    }
 
     return (
         <div className={styles.photoModal}>
@@ -77,24 +104,7 @@ const PhotoModal = ({ selectedPhoto }) => {
             </div>
 
             <div className={styles.commentSide}>
-                <form
-                    onSubmit={commentSubmitHandler}
-                    className={styles.commentHeader}
-                >
-                    <textarea
-                        ref={commentRef}
-                        className={styles.commentBox}
-                        type="textarea"
-                        rows="1"
-                        placeholder="I want to comment..."
-                    />
-                    <button
-                        type="submit"
-                        className={styles.commentSubmitButton}
-                    >
-                        <FontAwesomeIcon icon={faReply} size="sm" />
-                    </button>
-                </form>
+                {commentForm}
                 <div className={styles.commentArea}>
                     {comments.length > 0 ? (
                         comments

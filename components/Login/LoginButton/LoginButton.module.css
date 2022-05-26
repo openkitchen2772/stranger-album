@@ -1,0 +1,50 @@
+.loginButton {
+    position: fixed;
+    top: 0;
+    right: 17%;
+    min-width: 5.5rem;
+    padding: 1rem;
+    background-color: #777;
+    color: white;
+    text-align: center;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    border-radius: 0 0 10px 10px;
+    cursor: pointer;
+    z-index: 50;
+    transition: background-color ease-out 0.2s, top ease-out 0.2s;
+}
+
+.loginButton:hover {
+    background-color: #aaa;
+    transition: background-color ease-out 0.2s;
+}
+
+.loginButton.hide {
+    top: -20%;
+    transition: top ease-in 0.2s;
+}
+
+.logoutButton {
+    position: fixed;
+    top: 0;
+    right: 17%;
+    min-width: 5.5rem;
+    padding: 1rem;
+    background-color: rgb(116, 200, 184);
+    color: white;
+    text-align: center;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    border-radius: 0 0 10px 10px;
+    cursor: pointer;
+    z-index: 50;
+    transition: background-color ease-out 0.2s;
+}
+
+.logoutButton:hover {
+    background-color: #aaa;
+    transition: background-color ease-out 0.2s;
+}

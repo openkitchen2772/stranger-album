@@ -3,23 +3,15 @@ import { useEffect, useState } from "react";
 import styles from "./Notification.module.css";
 import Portal from "../../hoc/Portal";
 
-const Notification = (props) => {
-    const [gone, setGone] = useState(false);
-    const lastTime = props.lastTime ? props.lastTime : 3000;
-
-    useEffect(() => {
-        setTimeout(() => {
-            setGone(true);
-        }, lastTime);
-    }, [lastTime]);
+const Notification = ({ show, gone, children }) => {
+    let classes = `
+        ${styles.notification} 
+        ${show ? styles.show : ""} 
+        ${gone ? styles.gone : ""}`;
 
     return (
         <Portal>
-            <div
-                className={`${styles.notification} ${gone ? styles.gone : ""}`}
-            >
-                {props.children}
-            </div>
+            <div className={classes}>{children}</div>
         </Portal>
     );
 };

@@ -1,5 +1,5 @@
-import styles from './NavigationItems.module.css';
-import NavigationItem from './NavigationItem';
+import styles from "./NavigationItems.module.css";
+import NavigationItem from "./NavigationItem";
 
 const NavigationItems = () => {
     return (
@@ -10,6 +10,6 @@ const NavigationItems = () => {
             </ul>
         </nav>
     );
-}
+};
 
 export default NavigationItems;

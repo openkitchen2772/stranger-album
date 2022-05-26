@@ -1,6 +1,6 @@
 .imageCard {
     height: 23.5rem;
-    width: 19rem;
+    width: 90%; /* fixed suitable size: 19rem */
     border: 1px solid #ccc;
     border-radius: 10px;
     cursor: pointer;
@@ -32,4 +32,25 @@
     position: relative;
     height: 100%;
     width: 100%;
+}
+
+/* when sufficient space for 2 cards a row */
+@media (min-width: 855px) {
+    .imageCard {
+        width: 45%; /* fixed suitable size: 19rem */
+    }
+}
+
+/* when sufficient space for 3 cards a row */
+@media (min-width: 1180px) {
+    .imageCard {
+        width: 30%; /* fixed suitable size: 19rem */
+    }
+}
+
+/* when sufficient space for 4 cards a row */
+@media (min-width: 1530px) {
+    .imageCard {
+        width: 19rem; /* fixed suitable size: 19rem */
+    }
 }

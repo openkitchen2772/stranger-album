@@ -1,11 +1,12 @@
 import React from "react";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useContext } from "react";
 
 import styles from "./UploadForm.module.css";
 import Notification from "../UI/Notification/Notification";
 import Spinner from "../UI/Spinner/Spinner";
+import AuthContext from "../../store/context/auth-context";
 
-const uploadImageToImgur = async (formData, imgurClientId) => {
+const uploadImageToImgur = async (formData, imgurClientId, uploader) => {
     let error, responseStatus;
     const imageData = await fetch("https://api.imgur.com/3/image", {
         method: "POST",
@@ -23,7 +24,7 @@ const uploadImageToImgur = async (formData, imgurClientId) => {
                 id: data.id,
                 imageURL: data.link,
                 title: data.title,
-                creator: "stranger",
+                creator: uploader,
             };
         })
         .catch((err) => (error = err));
@@ -53,23 +54,25 @@ const uploadImageToImgur = async (formData, imgurClientId) => {
 const UploadForm = ({ imgurClientId }) => {
     const [title, setTitle] = useState("");
     const [file, setFile] = useState(null);
-    const [uploaded, setUploaded] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
+    const [hideNotification, setHideNotification] = useState(false);
     const [isUploadSuccess, setIsUploadSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const authCtx = useContext(AuthContext);
+
     useEffect(() => {
         let timer;
-        if (uploaded) {
+        if (showNotification) {
             timer = setTimeout(() => {
-                setIsUploadSuccess(false);
-                setUploaded(false);
-            }, 4000);
+                hideNotificationHandler();
+            }, 3000);
         }
 
         return () => {
             clearTimeout(timer);
         };
-    }, [uploaded]);
+    }, [showNotification]);
 
     const titleChangedHandler = (event) => {
         setTitle(event.target.value);
@@ -77,6 +80,16 @@ const UploadForm = ({ imgurClientId }) => {
 
     const fileUploadHandler = (event) => {
         setFile(event.target.files[0]);
+    };
+
+    const showNotificationHandler = () => {
+        setShowNotification(true);
+        setHideNotification(false);
+    };
+
+    const hideNotificationHandler = () => {
+        setShowNotification(false);
+        setHideNotification(true);
     };
 
     const SubmitHandler = async (event) => {
@@ -89,11 +102,15 @@ const UploadForm = ({ imgurClientId }) => {
         formData.append("image", file, file.name);
         formData.append("title", title);
 
-        let uploadSuccess = await uploadImageToImgur(formData, imgurClientId);
+        let uploadSuccess = await uploadImageToImgur(
+            formData,
+            imgurClientId,
+            authCtx.displayName
+        );
 
         setIsLoading(false);
-        setUploaded(true);
         setIsUploadSuccess(uploadSuccess);
+        showNotificationHandler();
         clearUploadForm();
     };
 
@@ -134,67 +151,75 @@ const UploadForm = ({ imgurClientId }) => {
         }
     }, [file, isLoading]);
 
-    let notificationContent;
-    if (uploaded) {
-        if (!isUploadSuccess) {
-            notificationContent = (
-                <Notification lastTime={3000}>
-                    <span style={{ color: "red" }}>
-                        {"Oh no, something went wrong!"}
-                    </span>
-                </Notification>
-            );
-        } else {
-            notificationContent = (
-                <Notification lastTime={3000}>
-                    <span style={{ color: "green" }}>
-                        {"Your photo is uploaded! :)"}
-                    </span>
-                </Notification>
-            );
-        }
-    }
+    const notificationContent = (
+        <Notification show={showNotification} gone={hideNotification}>
+            {isUploadSuccess && (
+                <span style={{ color: "green" }}>
+                    {"Your photo is uploaded! :)"}
+                </span>
+            )}
+            {!isUploadSuccess && (
+                <span style={{ color: "red" }}>
+                    {"Oh no, something went wrong!"}
+                </span>
+            )}
+        </Notification>
+    );
 
     return (
         <div>
             {notificationContent}
-            <form className={styles.uploadForm} onSubmit={SubmitHandler}>
-                <div className={styles.formControl}>
-                    <label htmlFor="name">Photo Title</label>
-                    <input
-                        name="name"
-                        id="name"
-                        type="text"
-                        size="30"
-                        value={title}
-                        onChange={titleChangedHandler}
-                        disabled={isLoading}
-                        required
-                    />
+            {!authCtx.tokenId && (
+                <div style={{ fontWeight: "bold", color: "#999" }}>
+                    {"Login to upload photos to the album! :)"}
                 </div>
+            )}
+            {authCtx.tokenId && (
+                <form className={styles.uploadForm} onSubmit={SubmitHandler}>
+                    <div className={styles.formControl}>
+                        <label htmlFor="name">Photo Title</label>
+                        <input
+                            name="name"
+                            id="name"
+                            type="text"
+                            size="30"
+                            value={title}
+                            onChange={titleChangedHandler}
+                            disabled={isLoading}
+                            required
+                        />
+                    </div>
 
-                <div className={`${styles.formControl} ${styles.file}`}>
-                    <label
-                        htmlFor="uploadFile"
-                        className={isLoading ? styles.disabled : ""}
+                    <div className={`${styles.formControl} ${styles.file}`}>
+                        <label
+                            htmlFor="uploadFile"
+                            className={isLoading ? styles.disabled : ""}
+                        >
+                            {uploadBoxContent}
+                        </label>
+                        <input
+                            name="uploadFile"
+                            id="uploadFile"
+                            type="file"
+                            accept="image/png, image/gif, image/jpeg"
+                            onChange={fileUploadHandler}
+                            disabled={isLoading}
+                            required
+                        />
+                    </div>
+
+                    <button
+                        className={styles.submitButton}
+                        disabled={isLoading}
                     >
-                        {uploadBoxContent}
-                    </label>
-                    <input
-                        name="uploadFile"
-                        id="uploadFile"
-                        type="file"
-                        accept="image/png, image/gif, image/jpeg"
-                        onChange={fileUploadHandler}
-                        disabled={isLoading}
-                        required
-                    />
-                </div>
-
-                <button className={styles.submitButton} disabled={isLoading}>
-                    {isLoading ? <span>Uploading ...</span> : "Submit Photo"}
-                </button>
-            </form>
+                        {isLoading ? (
+                            <span>Uploading ...</span>
+                        ) : (
+                            "Submit Photo"
+                        )}
+                    </button>
+                </form>
+            )}
         </div>
     );
 };
