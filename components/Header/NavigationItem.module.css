@@ -3,3 +3,11 @@
     font-weight: bold;
     margin: 0 3rem;
 }
+
+.navigationItem:hover {
+    color: #aaa;
+}
+
+.navigationItem.active {
+    color: #aaa;
+}

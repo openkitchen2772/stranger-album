@@ -1,0 +1,81 @@
+.formControl {
+    display: flex;
+    flex-flow: column;
+    margin-bottom: 1.2rem;
+}
+
+.formControl label {
+    font-size: 14pt;
+    margin-bottom: 0.5rem;
+}
+
+.formControl input[type="text"],
+.formControl input[type="password"] {
+    font-family: inherit;
+    font-size: 12pt;
+    height: 2.4rem;
+    width: 20rem;
+    padding: 1rem 0.5rem;
+    border: 1px solid #555;
+}
+
+.formControl input[type="text"]:focus,
+.formControl input[type="password"]:focus {
+    outline: none;
+    border-color: #bbb;
+}
+
+.formControl input[type="text"]:disabled,
+.formControl input[type="password"]:disabled {
+    border-color: #aaa;
+}
+
+.buttonControl {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+}
+
+.authButton {
+    min-width: 5rem;
+    padding: 0.75rem;
+    background-color: #4e4e4e;
+    border: 1px solid #777;
+    border-radius: 15px;
+    font-family: inherit;
+    font-size: 12pt;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: background-color ease-out 0.2s;
+}   
+
+.authButton:hover {
+    background-color: #777777;
+    transition: background-color ease-out 0.2s;
+}
+
+.authButton:disabled {
+    background-color: #aaa;
+    border-color: #aaa;
+    cursor: wait;
+}
+
+.toggleButton {
+    background-color: white;
+    border: none;
+    border-radius: 15px;
+    font-family: inherit;
+    font-size: 11pt;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.toggleButton:hover {
+    color: #777777;
+}
+
+.toggleButton:disabled {
+    color: #aaa;
+    cursor: wait;
+}
