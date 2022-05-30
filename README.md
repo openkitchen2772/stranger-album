@@ -32,13 +32,3 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Imgur API
-
-Client ID: a3492a5941a6bf8
-
-Secret: d03084704b6dee379519d77db98439fe76a3dfa9
-
-Refresh: 0f778c6e62fd6f03def5022e1fb74484ae86c152
-
-Access: d9ebfc83fb12f6b5db65df6e03b1ecd9656a38e3
