@@ -12,7 +12,7 @@ const uploadImageToImgur = async (formData, imgurClientId, uploader) => {
         method: "POST",
         body: formData,
         headers: {
-            Authorization: "Client-ID " + imgurClientId,
+            Authorization: "Bearer " + imgurClientId,
         },
     })
         .then((response) => {
